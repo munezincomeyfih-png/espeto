@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dom do Espeto | O verdadeiro sabor do churrasco</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-dark:#181110;
+    --bg-darker:#100b09;
+    --bg-card:#231a17;
+    --ember:#e8590c;
+    --ember-deep:#a83e0a;
+    --gold:#d4a017;
+    --gold-light:#f0c94a;
+    --cream:#f3e9d8;
+    --smoke:#a89c8a;
+    --chili:#c1272d;
+    --line:rgba(212,160,23,0.25);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg-dark);
+    color:var(--cream);
+    font-family:'Work Sans', sans-serif;
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+  h1,h2,h3, .display{
+    font-family:'Anton', sans-serif;
+    font-weight:400;
+    letter-spacing:0.5px;
+    text-transform:uppercase;
+  }
+  a{color:inherit; text-decoration:none;}
+  img{max-width:100%; display:block;}
+  .wrap{max-width:1100px; margin:0 auto; padding:0 24px;}
+  button{font-family:inherit;}
+
+  /* subtle ember grain background */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:radial-gradient(circle at 20% 10%, rgba(232,89,12,0.08), transparent 40%),
+                      radial-gradient(circle at 85% 30%, rgba(212,160,23,0.06), transparent 45%);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(16,11,9,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  nav.wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 24px;
+  }
+  .logo{
+    display:flex; align-items:center; gap:10px;
+    font-family:'Anton', sans-serif;
+    font-size:20px;
+    letter-spacing:1px;
+    color:var(--cream);
+  }
+  .logo span{color:var(--ember);}
+  .nav-links{display:flex; gap:28px; align-items:center;}
+  .nav-links a{
+    font-size:14px; font-weight:600; color:var(--smoke);
+    transition:color .2s;
+  }
+  .nav-links a:hover{color:var(--gold-light);}
+  .btn-wpp{
+    display:flex; align-items:center; gap:8px;
+    background:#25D366;
+    color:#0b2b16;
+    font-weight:700;
+    font-size:14px;
+    padding:9px 16px;
+    border-radius:6px;
+    transition:transform .15s, box-shadow .2s;
+    border:none; cursor:pointer;
+  }
+  .btn-wpp:hover{transform:translateY(-1px); box-shadow:0 4px 14px rgba(37,211,102,0.35);}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    padding:90px 24px 70px;
+    text-align:center;
+    overflow:hidden;
+    z-index:1;
+  }
+  .crown{
+    font-size:13px; letter-spacing:3px; color:var(--gold);
+    font-weight:700;
+    margin-bottom:18px;
+  }
+  .hero h1{
+    font-size:clamp(46px, 9vw, 92px);
+    line-height:0.95;
+    color:var(--cream);
+    text-shadow:0 0 40px rgba(232,89,12,0.25);
+  }
+  .hero h1 .accent{color:var(--ember);}
+  .hero p.sub{
+    max-width:520px; margin:22px auto 0;
+    color:var(--smoke);
+    font-size:17px;
+  }
+  .hero-ctas{
+    display:flex; gap:14px; justify-content:center; flex-wrap:wrap;
+    margin-top:34px;
+  }
+  .btn-primary{
+    background:var(--ember);
+    color:#1c0900;
+    font-weight:700;
+    padding:14px 26px;
+    border-radius:6px;
+    font-size:15px;
+    transition:transform .15s, background .2s;
+    border:none; cursor:pointer;
+  }
+  .btn-primary:hover{background:var(--gold-light); transform:translateY(-2px);}
+  .btn-ghost{
+    border:1px solid var(--line);
+    color:var(--cream);
+    padding:14px 26px;
+    border-radius:6px;
+    font-size:15px;
+    font-weight:600;
+    background:none; cursor:pointer;
+  }
+  .btn-ghost:hover{border-color:var(--gold);}
+
+  /* ember particles */
+  .embers{position:absolute; inset:0; pointer-events:none; z-index:-1;}
+  .ember-dot{
+    position:absolute; bottom:-10px;
+    width:5px; height:5px; border-radius:50%;
+    background:var(--ember);
+    box-shadow:0 0 8px 2px rgba(232,89,12,0.7);
+    animation:rise linear infinite;
+    opacity:0;
+  }
+  @keyframes rise{
+    0%{transform:translateY(0) translateX(0); opacity:0;}
+    10%{opacity:1;}
+    90%{opacity:0.6;}
+    100%{transform:translateY(-420px) translateX(var(--drift,20px)); opacity:0;}
+  }
+
+  /* badge strip */
+  .badge-strip{
+    display:flex; justify-content:center; gap:36px; flex-wrap:wrap;
+    padding:22px 24px; margin:0 auto 0;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    background:var(--bg-darker);
+    position:relative; z-index:1;
+  }
+  .badge-strip .item{
+    display:flex; align-items:center; gap:9px;
+    font-size:13px; letter-spacing:1.5px; color:var(--gold);
+    font-weight:600; text-transform:uppercase;
+  }
+  .badge-strip .item::before{content:"\2726"; color:var(--ember); font-size:12px;}
+
+  /* skewer divider */
+  .skewer-divider{
+    display:flex; align-items:center; gap:0;
+    max-width:1100px; margin:64px auto; padding:0 24px;
+  }
+  .skewer-divider .stick{
+    flex:1; height:2px;
+    background:linear-gradient(90deg, transparent, var(--gold) 15%, var(--gold) 85%, transparent);
+  }
+  .skewer-divider .cube{
+    width:14px; height:14px; margin:0 3px;
+    background:var(--ember-deep);
+    border:1px solid var(--gold);
+    transform:rotate(45deg);
+  }
+
+  /* ---------- MENU ---------- */
+  section{position:relative; z-index:1;}
+  .section-head{text-align:center; margin-bottom:44px;}
+  .section-head .eyebrow{
+    color:var(--ember); font-size:13px; letter-spacing:3px; font-weight:700;
+    margin-bottom:10px; text-transform:uppercase;
+  }
+  .section-head h2{font-size:clamp(32px,5vw,48px); color:var(--cream);}
+  .section-head p.hint{color:var(--smoke); font-size:14px; margin-top:10px;}
+
+  .menu-list{
+    display:flex; flex-direction:column; gap:10px;
+    padding:0 24px 140px;
+  }
+  .menu-item{
+    display:flex; align-items:center; gap:18px;
+    background:var(--bg-card);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:14px 18px;
+    transition:border-color .2s, transform .15s;
+    flex-wrap:wrap;
+  }
+  .menu-item.in-cart{border-color:var(--ember);}
+  .menu-item:hover{border-color:var(--gold);}
+  .menu-item .icon{
+    width:38px; height:38px; flex:none;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--bg-darker);
+    border-radius:50%;
+    border:1px solid var(--line);
+  }
+  .menu-item .icon svg{width:20px; height:20px;}
+  .menu-item .info{flex:1; min-width:160px;}
+  .menu-item .name{
+    font-weight:600; font-size:16px; color:var(--cream);
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+  }
+  .tag{
+    font-size:10px; font-weight:700; letter-spacing:0.5px;
+    padding:2px 8px; border-radius:20px;
+    text-transform:uppercase;
+  }
+  .tag.novo{background:var(--chili); color:#ffe8e8;}
+  .tag.spicy{background:transparent; border:1px solid var(--chili); color:#ff8a80;}
+  .price{
+    font-family:'Anton', sans-serif;
+    background:var(--gold);
+    color:#3a2600;
+    font-size:17px;
+    padding:8px 16px;
+    border-radius:6px;
+    white-space:nowrap;
+  }
+  .qty-control{
+    display:flex; align-items:center; gap:0;
+    border:1px solid var(--line);
+    border-radius:6px;
+    overflow:hidden;
+    flex:none;
+  }
+  .qty-control button{
+    width:34px; height:34px;
+    background:var(--bg-darker);
+    color:var(--gold-light);
+    border:none;
+    font-size:18px;
+    font-weight:700;
+    cursor:pointer;
+    transition:background .15s, color .15s;
+    line-height:1;
+  }
+  .qty-control button:hover{background:var(--ember); color:#1c0900;}
+  .qty-control button:disabled{opacity:0.35; cursor:not-allowed; background:var(--bg-darker); color:var(--gold-light);}
+  .qty-control .qty-val{
+    width:34px; text-align:center;
+    font-weight:700; font-size:15px;
+    color:var(--cream);
+    user-select:none;
+  }
+
+  /* ---------- INFO CARDS ---------- */
+  .info-grid{
+    display:grid; grid-template-columns:1fr 1fr;
+    gap:18px; padding:0 24px; max-width:1100px; margin:0 auto;
+  }
+  .info-card{
+    background:var(--bg-card);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:24px;
+    display:flex; gap:16px; align-items:flex-start;
+  }
+  .info-card .icon-circle{
+    width:44px; height:44px; flex:none; border-radius:50%;
+    background:var(--chili);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .info-card .icon-circle svg{width:22px; height:22px; stroke:#fff;}
+  .info-card h3{font-family:'Work Sans'; font-size:14px; letter-spacing:1px; color:var(--smoke); text-transform:uppercase; font-weight:700;}
+  .info-card p{font-size:19px; font-weight:700; color:var(--gold-light); margin-top:4px;}
+
+  /* ---------- CTA ---------- */
+  .cta-section{
+    text-align:center;
+    padding:80px 24px;
+    background:radial-gradient(circle at 50% 0%, rgba(232,89,12,0.12), transparent 60%);
+  }
+  .cta-section h2{font-size:clamp(30px,6vw,52px); margin-bottom:14px;}
+  .cta-section p{color:var(--smoke); font-size:16px; margin-bottom:30px;}
+  .btn-big{
+    display:inline-flex; align-items:center; gap:12px;
+    background:#25D366; color:#0b2b16;
+    font-weight:700; font-size:18px;
+    padding:18px 34px; border-radius:8px;
+    transition:transform .15s, box-shadow .2s;
+    border:none; cursor:pointer;
+  }
+  .btn-big:hover{transform:translateY(-2px) scale(1.02); box-shadow:0 8px 24px rgba(37,211,102,0.35);}
+  .cta-section .who{margin-top:16px; font-size:13px; color:var(--smoke); letter-spacing:1px;}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    border-top:1px solid var(--line);
+    background:var(--bg-darker);
+    padding:44px 24px 28px;
+  }
+  .footer-inner{
+    max-width:1100px; margin:0 auto;
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;
+  }
+  .footer-logo{font-family:'Anton'; font-size:18px; letter-spacing:1px;}
+  .footer-logo span{color:var(--ember);}
+  .socials{display:flex; gap:14px;}
+  .socials a{
+    width:38px; height:38px; border-radius:50%;
+    border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    transition:border-color .2s, transform .15s;
+  }
+  .socials a:hover{border-color:var(--gold); transform:translateY(-2px);}
+  .socials svg{width:18px; height:18px; stroke:var(--cream);}
+  .footer-note{
+    text-align:center; font-size:12px; color:var(--smoke);
+    margin-top:30px; letter-spacing:0.5px;
+  }
+
+  /* ---------- FLOATING ORDER BAR ---------- */
+  .order-bar{
+    position:fixed; left:0; right:0; bottom:0; z-index:60;
+    background:var(--bg-darker);
+    border-top:1px solid var(--gold);
+    box-shadow:0 -8px 24px rgba(0,0,0,0.45);
+    transform:translateY(110%);
+    transition:transform .28s ease;
+  }
+  .order-bar.visible{transform:translateY(0);}
+  .order-bar-inner{
+    max-width:1100px; margin:0 auto;
+    padding:14px 24px;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:16px; flex-wrap:wrap;
+  }
+  .order-bar .summary{display:flex; flex-direction:column; gap:2px;}
+  .order-bar .summary .count{
+    font-size:12px; letter-spacing:1px; color:var(--smoke); text-transform:uppercase; font-weight:600;
+  }
+  .order-bar .summary .total{
+    font-family:'Anton', sans-serif; font-size:22px; color:var(--gold-light);
+  }
+  .order-bar .actions{display:flex; align-items:center; gap:10px;}
+  .btn-clear{
+    background:none; border:1px solid var(--line); color:var(--smoke);
+    padding:12px 16px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;
+  }
+  .btn-clear:hover{border-color:var(--chili); color:#ff8a80;}
+  .btn-send{
+    display:flex; align-items:center; gap:10px;
+    background:#25D366; color:#0b2b16;
+    font-weight:700; font-size:15px;
+    padding:14px 22px; border-radius:6px;
+    border:none; cursor:pointer;
+    transition:transform .15s, box-shadow .2s;
+  }
+  .btn-send:hover{transform:translateY(-2px); box-shadow:0 6px 18px rgba(37,211,102,0.35);}
+
+  @media(max-width:640px){
+    .nav-links{display:none;}
+    .info-grid{grid-template-columns:1fr;}
+    .badge-strip{gap:16px;}
+    .menu-item{flex-wrap:wrap;}
+    .order-bar-inner{justify-content:center; text-align:center;}
+    .order-bar .actions{width:100%; justify-content:center;}
+    .btn-send{flex:1; justify-content:center;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .ember-dot{animation:none; display:none;}
+    .order-bar{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="wrap">
+    <div class="logo">DOM <span>DO ESPETO</span></div>
+    <div class="nav-links">
+      <a href="#cardapio">Cardápio</a>
+      <a href="#pedido">Como pedir</a>
+      <a href="#contato">Contato</a>
+    </div>
+    <a class="btn-wpp" href="https://wa.me/5515997444931" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="#0b2b16"><path d="M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.4c1.5.8 3.1 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
+      15 99744-4931
+    </a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="embers" id="embers"></div>
+  <div class="crown">★ Assado na brasa · Qualidade e sabor com carinho ★</div>
+  <h1>O verdadeiro<br><span class="accent">sabor</span> do churrasco</h1>
+  <p class="sub">Espetinhos artesanais, assados na brasa e feitos com carinho pela Ana. Monte seu pedido abaixo e envie direto pelo WhatsApp.</p>
+  <div class="hero-ctas">
+    <a class="btn-primary" href="#cardapio">Montar meu pedido</a>
+    <a class="btn-ghost" href="https://wa.me/5515997444931" target="_blank" rel="noopener">Falar no WhatsApp</a>
+  </div>
+</section>
+
+<div class="badge-strip">
+  <div class="item">Assado na brasa</div>
+  <div class="item">Qualidade e sabor</div>
+  <div class="item">Feito com carinho</div>
+</div>
+
+<section id="cardapio" style="padding-top:70px;">
+  <div class="section-head wrap">
+    <div class="eyebrow">Cardápio</div>
+    <h2>Escolha o seu espeto</h2>
+    <p class="hint">Use os botões + e − para montar seu pedido. Quando estiver pronto, envie tudo direto no WhatsApp.</p>
+  </div>
+  <form class="menu-list wrap" id="menuForm">
+
+    <div class="menu-item" data-name="Espeto de carne" data-price="9.00">
+      <div class="icon">🥩</div>
+      <div class="info"><div class="name">Espeto de carne</div></div>
+      <div class="price">R$ 9,00</div>
+      <div class="qty-control">
+        <button type="button" class="qty-minus" aria-label="Diminuir quantidade">−</button>
+        <span class="qty-val">0</span>
+        <button type="button" class="qty-plus" aria-label="Aumentar quantidade">+</button>
+      </div>
+    </div>
+
+    <div class="menu-item" data-name="Espeto de frango" data-price="8.00">
+      <div class="icon">🍗</div>
+      <div class="info"><div class="name">Espeto de frango</div></div>
+      <div class="price">R$ 8,00</div>
+      <div class="qty-control">
+        <button type="button" class="qty-minus" aria-label="Diminuir quantidade">−</button>
+        <span class="qty-val">0</span>
+        <button type="button" class="qty-plus" aria-label="Aumentar quantidade">+</button>
+      </div>
+    </div>
+
+    <div class="menu-item" data-name="Espeto de coração" data-price="9.00">
+      <div class="icon">❤️</div>
+      <div class="info"><div class="name">Espeto de coração</div></div>
+      <div class="price">R$ 9,00</div>
+      <div class="qty-control">
+        <button type="button" class="qty-minus" aria-label="Diminuir quantidade">−</button>
+        <span class="qty-val">0</span>
+        <button type="button" class="qty-plus" aria-label="Aumentar quantidade">+</button>
+      </div>
+    </div>
+
+    <div class="menu-item" data-name="Espeto de panceta" data-price="9.00">
+      <div class="icon">🥓</div>
+      <div class="info"><div class="name">Espeto de panceta</div></div>
+      <div class="price">R$ 9,00</div>
+      <div class="qty-control">
+        <button type="button" class="qty-minus" aria-label="Diminuir quantidade">−</button>
+        <span class="qty-val">0</span>
+        <button type="button" class="qty-plus" aria-label="Aumentar quantidade">+</button>
+      </div>
+    </div>
+
+    <div class="menu-item" data-name="Espeto de linguiça" data-price="8.00">
+      <div class="icon">🌭</div>
+      <div class="info"><div class="name">Espeto de linguiça</div></div>
+      <div class="price">R$ 8,00</div>
+      <div class="qty-control">
+        <button type="button" class="qty-minus" aria-label="Diminuir quantidade">−</button>
+        <span class="qty-val">0</span>
+        <button type="button" class="qty-plus" aria-label="Aumentar quantidade">+</button>
+      </div>
+    </div>
+
+    <div class="menu-item" data-name="Espeto de linguiça apimentada" data-price="8.00">
+      <div class="icon">🌶️</div>
+      <div class="info"><div class="name">Espeto de linguiça apimentada <span class="tag spicy">Picante</span></div></div>
+      <div class="price">R$ 8,00</div>
+      <div class="qty-control">
+        <button type="button" class="qty-minus" aria-label="Diminuir quantidade">−</button>
+        <span class="qty-val">0</span>
+        <button type="button" class="qty-plus" aria-label="Aumentar quantidade">+</button>
+      </div>
+    </div>
+
+    <div class="menu-item" data-name="Espeto de kafta" data-price="10.00">
+      <div class="icon">🍢</div>
+      <div class="info"><div class="name">Espeto de kafta</div></div>
+      <div class="price">R$ 10,00</div>
+      <div class="qty-control">
+        <button type="button" class="qty-minus" aria-label="Diminuir quantidade">−</button>
+        <span class="qty-val">0</span>
+        <button type="button" class="qty-plus" aria-label="Aumentar quantidade">+</button>
+      </div>
+    </div>
+
+    <div class="menu-item" data-name="Espeto de kafta recheada" data-price="10.00">
+      <div class="icon">🧀</div>
+      <div class="info"><div class="name">Espeto de kafta recheada <span class="tag novo">Novo</span></div></div>
+      <div class="price">R$ 10,00</div>
+      <div class="qty-control">
+        <button type="button" class="qty-minus" aria-label="Diminuir quantidade">−</button>
+        <span class="qty-val">0</span>
+        <button type="button" class="qty-plus" aria-label="Aumentar quantidade">+</button>
+      </div>
+    </div>
+
+    <div class="menu-item" data-name="Espeto de medalhão" data-price="10.00">
+      <div class="icon">🥩</div>
+      <div class="info"><div class="name">Espeto de medalhão</div></div>
+      <div class="price">R$ 10,00</div>
+      <div class="qty-control">
+        <button type="button" class="qty-minus" aria-label="Diminuir quantidade">−</button>
+        <span class="qty-val">0</span>
+        <button type="button" class="qty-plus" aria-label="Aumentar quantidade">+</button>
+      </div>
+    </div>
+
+    <div class="menu-item" data-name="Espeto de misto com bacon" data-price="10.00">
+      <div class="icon">🥓</div>
+      <div class="info"><div class="name">Espeto de misto com bacon</div></div>
+      <div class="price">R$ 10,00</div>
+      <div class="qty-control">
+        <button type="button" class="qty-minus" aria-label="Diminuir quantidade">−</button>
+        <span class="qty-val">0</span>
+        <button type="button" class="qty-plus" aria-label="Aumentar quantidade">+</button>
+      </div>
+    </div>
+
+    <div class="menu-item" data-name="Espeto de pernil com bacon" data-price="10.00">
+      <div class="icon">🥓</div>
+      <div class="info"><div class="name">Espeto de pernil com bacon</div></div>
+      <div class="price">R$ 10,00</div>
+      <div class="qty-control">
+        <button type="button" class="qty-minus" aria-label="Diminuir quantidade">−</button>
+        <span class="qty-val">0</span>
+        <button type="button" class="qty-plus" aria-label="Aumentar quantidade">+</button>
+      </div>
+    </div>
+
+    <div class="menu-item" data-name="Espeto de queijo" data-price="10.00">
+         <div class="icon">🧀</div>
+      <div class="info"><div class="name">Espeto de queijo</div></div>
+      <div class="price">R$ 10,00</div>
+      <div class="qty-control">
+        <button type="button" class="qty-minus" aria-label="Diminuir quantidade">−</button>
+        <span class="qty-val">0</span>
+        <button type="button" class="qty-plus" aria-label="Aumentar quantidade">+</button>
+      </div>
+    </div>
+ 
+  </form>
+</section>
+ 
+<div class="skewer-divider">
+  <div class="stick"></div>
+  <div class="cube"></div><div class="cube"></div><div class="cube"></div>
+  <div class="stick"></div>
+</div>
+ 
+<section id="pedido">
+  <div class="section-head wrap">
+    <div class="eyebrow">Como pedir</div>
+    <h2>Faça o seu pedido</h2>
+  </div>
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="icon-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M12 2v20M2 12h20"/></svg>
+      </div>
+      <div>
+        <h3>Pedido mínimo</h3>
+        <p>A partir de 4 espetinhos</p>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="icon-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="18" r="2"/><circle cx="17" cy="18" r="2"/><path d="M3 18V6h2l3 5h9l2 4"/></svg>
+      </div>
+      <div>
+        <h3>Taxa de entrega</h3>
+        <p>R$ 2,00</p>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<section class="cta-section" id="contato">
+  <h2>Bateu a fome?</h2>
+  <p>Monte seu pedido no cardápio acima ou fale direto com a Ana.</p>
+  <a class="btn-big" href="https://wa.me/5515997444931" target="_blank" rel="noopener">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="#0b2b16"><path d="M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.4c1.5.8 3.1 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
+    Chamar no WhatsApp
+  </a>
+  <div class="who">Atendimento com Ana &middot; 15 99744-4931</div>
+</section>
+ 
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">DOM <span>DO ESPETO</span></div>
+    <div class="socials">
+      <a href="https://instagram.com/dom.do.espeto" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+      </a>
+      <a href="https://facebook.com/dom.do.espeto" target="_blank" rel="noopener" aria-label="Facebook">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M15 3h-2a5 5 0 0 0-5 5v2H6v4h2v7h4v-7h3l1-4h-4V8a1 1 0 0 1 1-1h3z"/></svg>
+      </a>
+    </div>
+  </div>
+  <div class="footer-note">Dom do Espeto &middot; @dom.do.espeto &middot; O verdadeiro sabor do churrasco</div>
+</footer>
+ 
+<!-- ---------- FLOATING ORDER BAR ---------- -->
+<div class="order-bar" id="orderBar">
+  <div class="order-bar-inner">
+    <div class="summary">
+      <span class="count" id="orderCount">0 itens</span>
+      <span class="total" id="orderTotal">R$ 0,00</span>
+    </div>
+    <div class="actions">
+      <button type="button" class="btn-clear" id="clearOrder">Limpar</button>
+      <button type="button" class="btn-send" id="sendOrder">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#0b2b16"><path d="M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.4c1.5.8 3.1 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
+        Enviar pedido no WhatsApp
+      </button>
+    </div>
+  </div>
+</div>
+ 
+<script>
+  // ---------- ember particles ----------
+  const container = document.getElementById('embers');
+  const emberCount = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 22;
+  for(let i=0;i<emberCount;i++){
+    const dot = document.createElement('div');
+    dot.className = 'ember-dot';
+    const left = Math.random()*100;
+    const dur = 4 + Math.random()*5;
+    const delay = Math.random()*8;
+    const drift = (Math.random()*60-30) + 'px';
+    dot.style.left = left+'%';
+    dot.style.animationDuration = dur+'s';
+    dot.style.animationDelay = delay+'s';
+    dot.style.setProperty('--drift', drift);
+    container.appendChild(dot);
+  }
+ 
+  // ---------- order / cart system ----------
+  const WHATSAPP_NUMBER = '5515997444931';
+  const DELIVERY_FEE = 2.00;
+ 
+  const money = (v) => 'R$ ' + v.toFixed(2).replace('.', ',');
+ 
+  const items = Array.from(document.querySelectorAll('.menu-item')).map((el) => {
+    return {
+      el,
+      name: el.dataset.name,
+      price: parseFloat(el.dataset.price),
+      qty: 0,
+      qtyEl: el.querySelector('.qty-val'),
+      minusBtn: el.querySelector('.qty-minus'),
+      plusBtn: el.querySelector('.qty-plus'),
+    };
+  });
+ 
+  const orderBar = document.getElementById('orderBar');
+  const orderCountEl = document.getElementById('orderCount');
+  const orderTotalEl = document.getElementById('orderTotal');
+ 
+  function updateItem(item){
+    item.qtyEl.textContent = item.qty;
+    item.minusBtn.disabled = item.qty === 0;
+    item.el.classList.toggle('in-cart', item.qty > 0);
+  }
+ 
+  function updateBar(){
+    const chosen = items.filter(i => i.qty > 0);
+    const totalQty = chosen.reduce((sum, i) => sum + i.qty, 0);
+    const totalPrice = chosen.reduce((sum, i) => sum + i.qty * i.price, 0);
+ 
+    orderCountEl.textContent = totalQty + (totalQty === 1 ? ' item' : ' itens');
+    orderTotalEl.textContent = money(totalPrice);
+    orderBar.classList.toggle('visible', totalQty > 0);
+  }
+ 
+  items.forEach((item) => {
+    item.plusBtn.addEventListener('click', () => {
+      item.qty += 1;
+      updateItem(item);
+      updateBar();
+    });
+    item.minusBtn.addEventListener('click', () => {
+      if(item.qty > 0){
+        item.qty -= 1;
+        updateItem(item);
+        updateBar();
+      }
+    });
+  });
+ 
+  document.getElementById('clearOrder').addEventListener('click', () => {
+    items.forEach((item) => {
+      item.qty = 0;
+      updateItem(item);
+    });
+    updateBar();
+  });
+ 
+  document.getElementById('sendOrder').addEventListener('click', () => {
+    const chosen = items.filter(i => i.qty > 0);
+    if(chosen.length === 0) return;
+ 
+    const totalPrice = chosen.reduce((sum, i) => sum + i.qty * i.price, 0);
+ 
+    let msg = 'Olá! Gostaria de fazer o seguinte pedido:\n\n';
+    chosen.forEach((i) => {
+      msg += `${i.qty}x ${i.name} - ${money(i.qty * i.price)}\n`;
+    });
+    msg += `\nSubtotal: ${money(totalPrice)}`;
+    msg += `\nTaxa de entrega: ${money(DELIVERY_FEE)} (a confirmar)`;
+    msg += `\n\nPor favor, confirme o pedido e o endereço para entrega. Obrigado!`;
+ 
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank', 'noopener');
+  });
+</script>
+ 
+</body>
+</html>
+ 
